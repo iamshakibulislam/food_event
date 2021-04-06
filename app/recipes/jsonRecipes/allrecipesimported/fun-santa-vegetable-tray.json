@@ -1,0 +1,18 @@
+{
+    "directions": [
+        "Create a Santa face out of all the vegetables: cauliflower for the beard, red bell peppers for hat and mouth, cucumber slices for the face, cherry tomatoes for nose and shoulders, and olives for the eyes."
+    ],
+    "image": "https://imagesvc.meredithcorp.io/v3/mm/image?q=85&c=sc&poi=face&w=960&h=480&url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F4573365.jpg",
+    "ingredients": [
+        "1 head cauliflower, separated into florets",
+        "2  red bell peppers, cut into strips",
+        "\u00bd  cucumber, sliced",
+        "1 cup cherry tomatoes",
+        "2  black olives"
+    ],
+    "language": "en-US",
+    "source": "www.allrecipes.com",
+    "tags": [],
+    "title": "Fun Santa Vegetable Tray",
+    "url": "https://www.allrecipes.com/recipe/261047/fun-santa-vegetable-tray/"
+}

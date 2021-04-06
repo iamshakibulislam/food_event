@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{%block content %}
+
+
+
+
+
+
+
+<table> 
+  <tr>
+    <th> ID </th>
+    <th> Description</th>
+    <th>Recipe</th>
+    
+  </tr>
+  
+  {% for item in items %}
+  <tr>
+  <th> {{item.ingredient.id}} </th>
+  <th> {{item.ingredient.description}}</th>
+  <th>{{item.ingredient.recipe.title}}</th>
+
+  </tr>
+  {%endfor%}
+</table>
+{%endblock%}

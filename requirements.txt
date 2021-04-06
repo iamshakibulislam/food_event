@@ -1,0 +1,17 @@
+Django>=2.2.9,<2.3.0
+djangorestframework>=3.9.0,<3.10.0
+psycopg2>=2.7.5,<2.8.0
+flake8>=3.6.0,<3.7.0
+requests
+django-static-jquery>=2.1.4
+python-memcached
+gunicorn==20.0.4
+whitenoise==5.2.0
+
+redis
+celery
+redis
+celery[redis]
+django-celery-results
+django-celery-beat
+stripe==2.50.0
