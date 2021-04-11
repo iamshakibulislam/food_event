@@ -4,9 +4,14 @@ from django.shortcuts import render,redirect
 from core.models import User
 from django.http import HttpResponse
 from django.contrib import messages,auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from .models import UserProfile,PremiumUser
 import stripe
+import datetime
+
+from datetime import datetime,timedelta
+from django.utils import timezone
+stripe.verify_ssl_certs = False
 
 def home(request):
 
@@ -30,6 +35,7 @@ def signup(request):
 
                               user = User.objects.create_user(name = name, password=password, email=email,)
                               user.save()
+                              UserProfile.objects.create()
                               return redirect('login')
             else:
                   #messages.error(request, 'passwords not match')
@@ -60,9 +66,9 @@ def signup(request):
 def login(request):
 
       if request.method == 'POST':
-            name = request.POST['name']
+            email = request.POST['email']
             password = request.POST['password']
-            user = auth.authenticate(name=name, password=password)
+            user = auth.authenticate(email=email, password=password)
             if user is not None:
                   auth.login(request, user)
                   #messages.success(request, 'you are login')
@@ -74,25 +80,70 @@ def login(request):
             return render(request, 'accounts/login.html')
 
 
+def check_user_permission(user):
+  sel_user_profile = UserProfile.objects.get(user=user)
+  return sel_user_profile.expire_date < timezone.now()
 
 
+@login_required()
 def cart(request):
+      '''
       if request.method == 'POST':
             membership = request.POST.get('membership', 'MONTHLY')
             amount = 3
             if membership == 'YEARLY':
                   amount = 30
-            stripe.api_key = "sk_test_51IbOA2JIiVT83Jh6jFfGGiIHVCqJtO6NHO0bTO4Ca0YsILC0znv1dZVL0pQUCOpiQE0J6LrA8xNfn55G2YTNPYJi00rVVcHrZU"
-            customer = stripe.Customer.create(
-                  email = request.user.email,
-                  token = request.POST.get('stripeToken')
-            )
-            charge = stripe.Charge.create(
-                  customer = customer,
-                  amount = amount * 100,
-                  currency = 'usd',
-                  
-                  description = "membership"
-            )
+            
+      stripe.api_key = "sk_test_51IbOA2JIiVT83Jh6jFfGGiIHVCqJtO6NHO0bTO4Ca0YsILC0znv1dZVL0pQUCOpiQE0J6LrA8xNfn55G2YTNPYJi00rVVcHrZU"
+
+      session = stripe.checkout.Session.create(
+              payment_method_types=['card'],
+              line_items=[{
+                'name': 'Kavholm rental',
+                'amount': 3,
+                'currency': 'usd',
+                'quantity': 1,
+              }],
+  
+  
+  mode='payment',
+  success_url='https://example.com/success',
+  cancel_url='https://example.com/failure',
+)
+'''
          
       return render(request, 'accounts/cart.html')
+
+
+@login_required()
+def payment_success(request):
+
+      ssid = request.GET['session_id']
+      pkg=request.COOKIES['package']
+
+
+      
+      stripe.api_key = "sk_test_51IbOA2JIiVT83Jh6jFfGGiIHVCqJtO6NHO0bTO4Ca0YsILC0znv1dZVL0pQUCOpiQE0J6LrA8xNfn55G2YTNPYJi00rVVcHrZU"
+
+      data=stripe.checkout.Session.retrieve(ssid,)
+            
+      if data.payment_status != '' :
+
+        sel_user_profile = UserProfile.objects.get(user=request.user)
+
+        if pkg == 'MONTHLY' :
+          sel_user_profile.subscription_type = 'M'
+          sel_user_profile.expire_date = datetime.now()+timedelta(days=30)
+          sel_user_profile.save()
+
+        if pkg == 'YEARLY':
+          sel_user_profile.subscription_type = 'Y'
+          sel_user_profile.expire_date = datetime.now()+timedelta(days=365)
+          sel_user_profile.save()
+
+
+        return render(request,'accounts/payment-success.html')
+
+      else :
+            return HttpResponse('<h1>Payment Error</h1>')
+

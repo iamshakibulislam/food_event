@@ -7,9 +7,10 @@ from django.views.decorators.cache import cache_page
 from datetime import datetime, date, timedelta
 from django.http import HttpResponse, JsonResponse
 from app.tasks import my_first_task, data_extractor
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required()
 @cache_page(60 * 15)
 def recipe(request, recipe_id):
     recipeShow = get_object_or_404(RecipeOverview, id=recipe_id)
@@ -87,7 +88,7 @@ def recipe(request, recipe_id):
     }
 
     return render(request, 'recipes/recipe.html', context)
-
+@login_required()
 def recipe_search(request):
     """
     The Sync Recipes script will sync all of the recipes in json files into the database
@@ -118,7 +119,7 @@ def recipe_search(request):
 def faq(request):
     return render(request, 'faq/faq.html')
 
-
+@login_required()
 def user_favorite(request):
     recipeId = request.GET.get('recipe_id')
     interestId = request.GET.get('interest_id')
@@ -127,8 +128,8 @@ def user_favorite(request):
     interestObj.save()
     print(interestObj.interest)
    
-    
 
+@login_required()
 def user_yuk(request):
     recipeId = request.GET.get('recipe_id')
     interestId = request.GET.get('interest_id')

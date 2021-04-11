@@ -4,7 +4,7 @@ from . import views
 from django.conf.urls import url
 
 urlpatterns = [
-    #path('', views.index, name='index'), 
+    path('', views.index, name='index'), 
     path('dashboard/', views.dashboard, name='dashboard'), 
     #path('home/', views.home, name='home'),    
     #path('register', views.register, name='register'),

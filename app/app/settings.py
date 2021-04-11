@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'recipes',
     'django_celery_beat',
     'django_celery_results',
+    'sslserver'
     
 ]
 
@@ -207,3 +208,6 @@ CELERY_IMPORTS = ('app.tasks',)
 STRIPE_PUBLIC_KEY = ""
 STRIPE_SECRET_KEY = ""
 STRIPE_WEBHOOK_SECRET=""
+
+LOGIN_REDIRECT_URL='/accounts/login/'
+LOGIN_URL='/accounts/login/'

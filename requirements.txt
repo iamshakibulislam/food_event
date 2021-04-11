@@ -15,3 +15,4 @@ celery[redis]
 django-celery-results
 django-celery-beat
 stripe==2.50.0
+django-sslserver

@@ -5,6 +5,10 @@ from django.utils import timezone
 import datetime 
 from core.models import User
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from datetime import datetime, timedelta
+
 # Create your models here.
 
 # class Package(models.Model):
@@ -27,11 +31,15 @@ class UserProfile(models.Model):
       subscription_type= models.CharField(max_length=100,choices=SUBSCRIPTION,default="FREE")
       is_pro = models.BooleanField(default=False)
       def __str__(self):
-            return self.user.username
+            return self.user.email
 
 
 
-
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance,expire_date=datetime.now()+timedelta(days=30))
+    
 
 
 class PremiumUser(models.Model):

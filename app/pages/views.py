@@ -60,6 +60,7 @@ def mealplan_view(request):
     }
 
     return render(request, 'pages/mealPlanView.html', context)
+
 def dashboard(request):
     
     #importRecipe = SyncRecipes.sync_json_from_local()
@@ -140,9 +141,11 @@ def dashboard(request):
     return render(request, 'pages/dashboard.html', context)
 
 def index(request):
+    '''
     week = WeekDays.objects.get(pk=4)
     dayNeed1 = week.day1.id
     print(dayNeed1)
+    '''
 
     return render(request, 'pages/index.html')
 
